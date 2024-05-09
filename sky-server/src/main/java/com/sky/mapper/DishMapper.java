@@ -21,6 +21,7 @@ public interface DishMapper {
      * 插入菜品
      * @param dish
      */
+
     @AutoFill(value = OperationType.INSERT)
     void insert(Dish dish);
 }
