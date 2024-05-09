@@ -4,10 +4,25 @@
 <mapper namespace="com.sky.mapper.DishMapper">
 
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into dish (name, price, category_id, description, image, create_time, update_time, status, create_user, update_user)
         values
         (#{name}, #{price}, #{categoryId}, #{description}, #{image}, #{createTime}, #{updateTime}, #{status}, #{createUser}, #{updateUser})
 </insert>
+    <select id="pageQuery" resultType="com.sky.vo.DishVO" parameterType="com.sky.dto.DishPageQueryDTO">
+        select dish.*,c.name as categoryName from dish left outer join category c on dish.category_id = c.id
+        <where>
+            <if test="name != null">
+                and dish.name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId != null">
+                and dish.category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and dish.status = #{status}
+            </if>
+        </where>
+        order by dish.create_time desc
+    </select>
 </mapper>
 
