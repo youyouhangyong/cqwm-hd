@@ -52,14 +52,15 @@ public class DishServiceImpl implements DishService {
         List<DishFlavor> flavors = dishDTO.getFlavors();
         if (flavors != null && flavors.size() > 0) {
             flavors.forEach(flavor -> {
-                        flavor.setDishId(dishId);
-                    });
+                flavor.setDishId(dishId);
+            });
             dishFlavorMapper.insertBatch(flavors);
         }
     }
 
     /**
      * 根据id查询菜品信息和口味信息
+     *
      * @param dishPageQueryDTO
      * @return
      */
@@ -72,6 +73,7 @@ public class DishServiceImpl implements DishService {
 
     /**
      * 批量删除菜品
+     *
      * @param ids
      */
     @Transactional
@@ -90,7 +92,7 @@ public class DishServiceImpl implements DishService {
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
         //删除菜品数据
-        for (Long id : ids){
+        for (Long id : ids) {
             dishMapper.deleteById(id);
             //删除菜品关联的口味数据
             dishFlavorMapper.deleteByDishId(id);
