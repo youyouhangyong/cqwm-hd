@@ -128,7 +128,6 @@ public class DishController {
         Set keys = redisTemplate.keys(pattern);
         redisTemplate.delete(keys);
     }
-
 }
 
 
