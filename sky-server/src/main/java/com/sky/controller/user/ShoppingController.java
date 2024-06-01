@@ -22,16 +22,32 @@ public class ShoppingController {
 
     @PostMapping("/add")
     @ApiOperation("添加购物车")
-    public Result add(@RequestBody ShoppingCartDTO dto){
-        log.info("添加购物车,商品信息:{}",dto);
+    public Result add(@RequestBody ShoppingCartDTO dto) {
+        log.info("添加购物车,商品信息:{}", dto);
         shoppingCartService.addShoppingCart(dto);
         return Result.success();
     }
+
     @GetMapping("/list")
     @ApiOperation("获取购物车列表")
-    public Result<List> list (){
+    public Result<List> list() {
         log.info("获取购物车列表");
-        List<ShoppingCart>list = shoppingCartService.showShoppingCart();
+        List<ShoppingCart> list = shoppingCartService.showShoppingCart();
         return Result.success(list);
     }
+
+    /**
+     * 清空购物车
+     * @return
+     */
+    @DeleteMapping("/clear")
+    @ApiOperation("清空购物车")
+    public Result clear() {
+        log.info("清空购物车");
+        shoppingCartService.clearShoppingCart();
+        return Result.success();
+
+    }
+
+
 }

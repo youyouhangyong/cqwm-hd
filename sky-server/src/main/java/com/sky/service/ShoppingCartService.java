@@ -20,6 +20,11 @@ public interface ShoppingCartService {
      */
     List<ShoppingCart> showShoppingCart();
 
+    /**
+     * 清空购物车
+     */
+    void clearShoppingCart();
+
 //    /**
 //     * 删除购物车中的商品
 //     * @param productId
