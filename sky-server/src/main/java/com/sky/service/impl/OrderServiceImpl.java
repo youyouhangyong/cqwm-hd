@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import task.WebSocketTask;
+import websocket.WebSocketServer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -41,7 +43,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
 
-
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
@@ -54,6 +55,8 @@ public class OrderServiceImpl implements OrderService {
     private WeChatPayUtil weChatPayUtil;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Value("${sky.shop.address}")
     private String shopAddress;
@@ -170,6 +173,14 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+
+        //通过webSocket发送消息给用户端
+        Map map = new HashMap<>();
+        map.put("type", "1");
+        map.put("order id", ordersDB.getId());
+        map.put("cotent", "订单号"+outTradeNo);
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
     }
 
     /**
