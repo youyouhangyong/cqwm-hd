@@ -1,9 +1,9 @@
-package task;
+package com.sky.task;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import websocket.WebSocketServer;
+import com.sky.websocket.WebSocketServer;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

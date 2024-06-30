@@ -6,8 +6,19 @@ import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Map;
+
 @Mapper
 public interface OrderMapper {
+
+    /**
+     * 根据map查询订单总金额
+     *
+     * @param map
+     * @return
+     */
+    Double sumByMap(Map map);
+
     /**
      ** 插入订单
      * @param orders
