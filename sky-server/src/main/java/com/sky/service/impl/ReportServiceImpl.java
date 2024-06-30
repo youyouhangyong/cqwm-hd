@@ -2,8 +2,10 @@ package com.sky.service.impl;
 
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
+import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import java.util.Map;
 public class ReportServiceImpl implements ReportService {
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private UserMapper userMapper;
     /**
      * 获取营业额统计报表
      * @param begin
@@ -57,4 +61,44 @@ public class ReportServiceImpl implements ReportService {
                 turnoverList(StringUtils.join(turnoverList,",")).
                 build();
     }
+    /**
+     * 获取用户统计报表
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public UserReportVO getUserStatistics(LocalDate begin, LocalDate end) {
+        //用于存放每天的日期
+        List<LocalDate> dateList = new ArrayList<>();
+        List<Integer> newUserList= new ArrayList<>();
+        List<Integer> totalUserList= new ArrayList<>();
+        while (!begin.equals(end)){
+            begin = begin.plusDays(1);
+            dateList.add(begin);
+        }
+        for(LocalDate date : dateList){
+            //查询date日期的营业额
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+
+            Map map =new HashMap();
+            map.put("end",endTime);
+
+            Integer totalUser = userMapper.countByMap(map);
+
+            map.put("begin",beginTime);
+            Integer newUser = userMapper.countByMap(map);
+
+            newUserList.add(newUser);
+            totalUserList.add(totalUser);
+        }
+        return UserReportVO.
+                builder().
+                dateList(StringUtils.join(dateList,",")).
+                totalUserList(StringUtils.join(totalUserList,",")).
+                newUserList(StringUtils.join(newUserList,",")).
+                build();
+    }
+
 }
