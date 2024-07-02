@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 
 /**
@@ -27,8 +28,10 @@ import java.time.LocalDate;
 public class ReportController {
     @Autowired
     private ReportService reportService;
+
     /**
      * 营业额统计
+     *
      * @param begin
      * @param end
      * @return
@@ -38,12 +41,13 @@ public class ReportController {
     public Result<TurnoverReportVO> turnoverStatistics(
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
-            log.info("营业额统计，开始时间：{}，结束时间：{}", begin, end);
+        log.info("营业额统计，开始时间：{}，结束时间：{}", begin, end);
         return Result.success(reportService.getTurnoverStatistics(begin, end));
     }
 
     /**
      * 用户统计
+     *
      * @param begin
      * @param end
      * @return
@@ -52,39 +56,47 @@ public class ReportController {
     @ApiOperation("用户统计")
     public Result<UserReportVO> userStatistics(
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
-            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end)
-    {
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         log.info("用户统计，开始时间：{}，结束时间：{}", begin, end);
-        return Result.success(reportService.getUserStatistics(begin,end));
+        return Result.success(reportService.getUserStatistics(begin, end));
     }
 
     /**
      * 订单统计
+     *
      * @return
      */
     @GetMapping("/orderStatistics")
     @ApiOperation("订单统计")
     public Result<OrderReportVO> orderStatistics(
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
-            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end)
-    {
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         log.info("订单统计，开始时间：{}，结束时间：{}", begin, end);
         return Result.success(reportService.getOrderStatistics(begin, end));
     }
 
     /**
      * 订单top10统计
+     *
      * @return
      */
     @GetMapping("/top10")
     @ApiOperation("订单top10统计")
     public Result<SalesTop10ReportVO> top10(
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
-            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end)
-    {
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         log.info("订单top10统计，开始时间：{}，结束时间：{}", begin, end);
         return Result.success(reportService.getSalesTop10(begin, end));
     }
 
-
+    /**
+     * 导出数据报表
+     * @param response
+     */
+    @GetMapping("/export")
+    @Autowired
+    public void export(HttpServletResponse response) {
+        log.info("导出数据报表");
+        reportService.export(response);
+    }
 }
